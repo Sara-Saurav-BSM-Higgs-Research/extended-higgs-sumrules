@@ -32,3 +32,6 @@ dist/
 *.log
 outputs/
 results/generated/
+
+# Private local agent reports
+/notes/
