@@ -95,3 +95,30 @@ def scalar_potential(
         + params.lambda4 * b12 * b21
         + sp.Rational(1, 2) * params.lambda5 * (b12**2 + b21**2)
     )
+
+
+def neutral_tadpoles(
+    phi1: HiggsDoublet,
+    phi2: HiggsDoublet,
+    params: TwoHDMParameters,
+) -> tuple[sp.Expr, sp.Expr]:
+    """Return dV/drho1 and dV/drho2 at zero field fluctuations.
+
+    The real VEVs remain arbitrary, including zero; no stationarity conditions
+    are imposed and no division by a VEV is performed.
+    """
+    potential = scalar_potential(phi1, phi2, params)
+    vacuum = {
+        field: 0
+        for phi in (phi1, phi2)
+        for field in (
+            phi.charged_real,
+            phi.charged_imag,
+            phi.neutral_real,
+            phi.neutral_imag,
+        )
+    }
+    return (
+        sp.expand(sp.diff(potential, phi1.neutral_real).subs(vacuum)),
+        sp.expand(sp.diff(potential, phi2.neutral_real).subs(vacuum)),
+    )

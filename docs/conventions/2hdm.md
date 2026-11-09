@@ -81,6 +81,44 @@ All mass parameters and quartic couplings are real.
 
 The Lagrangian contains the potential as $\mathcal{L}\supset -V$.
 
+## Neutral tadpoles and stationarity
+
+`neutral_tadpoles(phi1, phi2, params)` returns the ordered pair
+\((T_1,T_2)\), defined by
+
+\[
+T_i=\left.\frac{\partial V}{\partial\rho_i}\right|_{x_j=y_j=\rho_j=\eta_j=0},
+\qquad i,j=1,2.
+\]
+
+The derivatives are taken before setting all eight field fluctuations to zero.
+The real VEVs and real potential parameters remain independent; neither VEV is
+assumed nonzero, and the implementation never divides by a VEV.
+Independently, the neutral vacuum potential is
+
+\[
+V_0=\frac{m_{11}^2v_1^2+m_{22}^2v_2^2}{2}-m_{12}^2v_1v_2
++\frac{\lambda_1v_1^4+\lambda_2v_2^4}{8}
++\frac{(\lambda_3+\lambda_4+\lambda_5)v_1^2v_2^2}{4}.
+\]
+
+Thus \(T_i=\partial V_0/\partial v_i\). Explicitly,
+
+\[
+T_1=m_{11}^2v_1-m_{12}^2v_2+\frac{\lambda_1v_1^3}{2}
++\frac{(\lambda_3+\lambda_4+\lambda_5)v_1v_2^2}{2},
+\]
+\[
+T_2=m_{22}^2v_2-m_{12}^2v_1+\frac{\lambda_2v_2^3}{2}
++\frac{(\lambda_3+\lambda_4+\lambda_5)v_1^2v_2}{2}.
+\]
+
+The neutral stationary-point conditions are \(T_1=T_2=0\). At this real,
+neutral configuration, first derivatives in the charged and CP-odd directions
+vanish under the stated CP-conserving conventions. Stationarity alone does not
+guarantee a local or global minimum; stability and competing extrema require
+separate analysis. The returned tadpoles do not impose stationarity.
+
 ## Discrete symmetry
 
 The intended $Z_2$ transformation is
@@ -104,7 +142,10 @@ The symbolic implementation will be checked using:
 3. Explicit $Z_2$ transformation of the potential.
 4. Special-case limits and independent reconstruction from the field components.
 
-Later tasks will derive stationary-point conditions and mass matrices from the same potential, without inserting expected results into the implementation.
+Neutral tadpoles are derived from the same potential and checked against the
+independently constructed vacuum potential, exact polynomial coefficients,
+zero-VEV limits and a fixed rational benchmark. Mass matrices remain future work;
+expected formulas are not inserted into production calculations.
 
 ## Primary research references
 
