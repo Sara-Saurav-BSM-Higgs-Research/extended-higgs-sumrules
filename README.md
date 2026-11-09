@@ -46,33 +46,33 @@ The intended calculations include:
 
 Reconstruct tree-level scattering amplitudes involving longitudinally polarized electroweak gauge bosons, including
 
-\[
+$$
 W_L^+W_L^- \rightarrow W_L^+W_L^-,
-\]
+$$
 
-\[
+$$
 W_L^+W_L^- \rightarrow Z_LZ_L,
-\]
+$$
 
-\[
+$$
 Z_LZ_L \rightarrow Z_LZ_L.
-\]
+$$
 
 The symbolic workflow will construct relevant contributions, perform Lorentz contractions, implement scattering kinematics, extract high-energy behavior and derive the conditions required for cancellation of energy-growing terms.
 
 The 2HDM provides a useful reference identity:
 
-\[
+$$
 (\kappa_V^h)^2+(\kappa_V^H)^2=1,
-\]
+$$
 
 where the normalized gauge-boson couplings are
 
-\[
+$$
 \kappa_V^h=\sin(\beta-\alpha),
 \qquad
 \kappa_V^H=\cos(\beta-\alpha).
-\]
+$$
 
 Models containing higher electroweak representations have additional scalar contributions to vector-boson scattering. Their sum rules will be reconstructed using the appropriate model-specific coupling conventions and scalar spectra.
 
@@ -84,9 +84,9 @@ Investigate the implications of partial-wave unitarity for scalar masses, mixing
 
 For a conventional elastic scattering partial-wave normalization, the tree-level perturbative criterion is
 
-\[
+$$
 \left|\operatorname{Re} a_0\right| \leq \frac{1}{2}.
-\]
+$$
 
 Planned investigations include individual scattering channels, mass and coupling bounds, and extensions to coupled-channel analyses.
 
