@@ -119,6 +119,75 @@ vanish under the stated CP-conserving conventions. Stationarity alone does not
 guarantee a local or global minimum; stability and competing extrema require
 separate analysis. The returned tadpoles do not impose stationarity.
 
+## CP-even neutral-vacuum Hessian
+
+`cp_even_mass_matrix(phi1, phi2, params) -> sp.ImmutableMatrix` returns the
+uneliminated 2×2 Hessian in the ordered basis \((\rho_1,\rho_2)\):
+
+\[
+M_{ij}=\left.\frac{\partial^2 V}{\partial\rho_i\partial\rho_j}
+\right|_{x_k=y_k=\rho_k=\eta_k=0}.
+\]
+
+Both derivatives precede evaluation of all eight fluctuations. The implementation
+derives every entry from `scalar_potential`; it imposes no tadpoles and makes no
+VEV divisions. Real VEVs, including zero, and all potential parameters remain
+independent. Canonical field normalization gives
+\(V_{\rm quadratic}=\tfrac12\rho^T M\rho\) in this sector, with a minus sign
+in the Lagrangian. The exact real symmetric Hessian is immutable.
+
+Writing \(L=\lambda_3+\lambda_4+\lambda_5\), independently expanded entries are
+\[
+M=\begin{pmatrix}
+m_{11}^2+\tfrac32\lambda_1v_1^2+\tfrac12Lv_2^2 & -m_{12}^2+Lv_1v_2\\
+-m_{12}^2+Lv_1v_2 & m_{22}^2+\tfrac32\lambda_2v_2^2+\tfrac12Lv_1^2
+\end{pmatrix}.
+\]
+These formulas are documentation and test oracles, never production inputs.
+
+### Stationary-point recipe (no public helper)
+
+First compute the general Hessian and `neutral_tadpoles`. Only if **both
+\(v_1\ne0\) and \(v_2\ne0\)** are explicitly assumed, solve \(T_1=T_2=0\)
+for \(m_{11}^2,m_{22}^2\) and substitute the resulting dictionary simultaneously
+into the already differentiated Hessian. For example, use nonzero real VEV
+symbols before `sp.solve(tadpoles, (p.m11_sq, p.m22_sq), dict=True)` and
+`M.subs(solution, simultaneous=True)`. This yields
+\[
+M_{\rm stat}=\begin{pmatrix}
+\lambda_1v_1^2+m_{12}^2v_2/v_1 & -m_{12}^2+Lv_1v_2\\
+-m_{12}^2+Lv_1v_2 & \lambda_2v_2^2+m_{12}^2v_1/v_2
+\end{pmatrix}.
+\]
+If checking via derivatives of the vacuum potential \(V_0\) with respect to
+VEVs, differentiate before eliminating mass parameters: otherwise their
+VEV-dependent substitutions alter those derivatives. Division-free checks,
+valid for arbitrary VEVs, are
+\[
+v_1(M_{11}-\lambda_1v_1^2)=T_1+m_{12}^2v_2,\qquad
+v_2(M_{22}-\lambda_2v_2^2)=T_2+m_{12}^2v_1.
+\]
+
+For zero VEVs, specialize the **unsolved** tadpoles first:
+
+- \(v_1=0,v_2\ne0\): stationarity requires \(m_{12}^2=0\),
+  \(m_{22}^2=-\lambda_2v_2^2/2\); \(m_{11}^2\) remains free. The matrix is
+  \(\operatorname{diag}(m_{11}^2+Lv_2^2/2,\lambda_2v_2^2)\).
+- \(v_2=0,v_1\ne0\): stationarity requires \(m_{12}^2=0\),
+  \(m_{11}^2=-\lambda_1v_1^2/2\); \(m_{22}^2\) remains free. The matrix is
+  \(\operatorname{diag}(\lambda_1v_1^2,m_{22}^2+Lv_1^2/2)\).
+- \(v_1=v_2=0\): both tadpoles vanish identically; all three quadratic
+  parameters remain free. The Hessian has diagonal entries
+  \(m_{11}^2,m_{22}^2\) and off-diagonal entry \(-m_{12}^2\).
+
+The general Hessian describes curvature even away from stationarity. Its
+eigenvalues describe physical CP-even squared masses at a suitable neutral
+stationary minimum with the documented real, CP-conserving conventions.
+Stationarity and CP-even positivity alone do not prove full local stability or
+global minimality; charged and CP-odd directions also matter. No mixing-angle
+sign convention is introduced. Distinct eigenvalues admit orthonormal real
+eigenvectors; a degenerate eigenspace has no unique eigenbasis.
+
 ## Discrete symmetry
 
 The intended $Z_2$ transformation is
@@ -144,8 +213,13 @@ The symbolic implementation will be checked using:
 
 Neutral tadpoles are derived from the same potential and checked against the
 independently constructed vacuum potential, exact polynomial coefficients,
-zero-VEV limits and a fixed rational benchmark. Mass matrices remain future work;
-expected formulas are not inserted into production calculations.
+zero-VEV limits and a fixed rational benchmark. The CP-even Hessian is checked
+against an independent real-component quadratic expansion, exact coefficient
+maps, symmetry, stationary branches, symbolic trace/determinant/characteristic
+polynomial, eigenvalue identities and orthonormal eigenvectors in distinct and
+degenerate cases. A fixed rational benchmark is independently verified using
+exact finite differences with Fraction arithmetic. Expected formulas are not
+inserted into production calculations.
 
 ## Primary research references
 

@@ -122,3 +122,31 @@ def neutral_tadpoles(
         sp.expand(sp.diff(potential, phi1.neutral_real).subs(vacuum)),
         sp.expand(sp.diff(potential, phi2.neutral_real).subs(vacuum)),
     )
+
+
+def cp_even_mass_matrix(
+    phi1: HiggsDoublet,
+    phi2: HiggsDoublet,
+    params: TwoHDMParameters,
+) -> sp.ImmutableMatrix:
+    """Return the uneliminated neutral-vacuum Hessian in (rho1, rho2) order.
+
+    Differentiate before setting all eight field fluctuations to zero. Real
+    VEVs remain arbitrary, including zero; no stationarity conditions or VEV
+    divisions are used. Physical masses require a suitable stationary minimum.
+    """
+    hessian = sp.hessian(
+        scalar_potential(phi1, phi2, params),
+        (phi1.neutral_real, phi2.neutral_real),
+    )
+    vacuum = {
+        field: 0
+        for phi in (phi1, phi2)
+        for field in (
+            phi.charged_real,
+            phi.charged_imag,
+            phi.neutral_real,
+            phi.neutral_imag,
+        )
+    }
+    return sp.ImmutableMatrix(hessian.subs(vacuum).applyfunc(sp.expand))
